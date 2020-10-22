@@ -44,32 +44,32 @@ disqusShortname = ""
     # logo = "logo.png"
 
     [[params.navigation.links]]
-      name = "Home"
+      name = "Bocconi & LBS projects"
       url = "#"
 
-    [[params.navigation.links]]
-      name = "Bocconi & LBS projects"
-      url = "blogs"
+    #[[params.navigation.links]]
+     #name = "Bocconi & LBS projects"
+     #url = "projects"
 
     [[params.navigation.links]]
-      name = "Working Experience"
-      url = "blogs/ipsum"
+      name = "About me"
+      url = "blogs"
 
     [[params.navigation.links]]
       name = "CV"
       url = "CV"
 
-    # Add custom links here by uncommenting code below. To remove links just delete
+    # Add cstom links here by uncommenting code below. To remove links just delete
     # the [[params.navigation.links]] map associated with that link. Copy and paste
     # code below if you need more links. Buttons work in the same way.
-    # [[params.navigation.links]]
+    # [[params.navigation.lks]]
     #    name = "NameOfLink"
     #    url = "UrlOfLink"
 
     # Button Style 1
     [[params.navigation.button1]]
       name = "Get Started"
-      url = "blogs"
+      url = "projects"
 
     # Button Style 2
     #[[params.navigation.button2]]
@@ -94,7 +94,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Investment evaluation - Bocconi"
       subtitle = "Harvard Case Study: Ocean Carrier"
-      image = "investment.jpg"
+      image = "investment.jpeg"
       url = "projects/investment1"
 
     [[params.tiles.showcase]]
@@ -106,14 +106,14 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Data Analytics with R - LBS"
       subtitle = "Movie Directors"
-      image = "pic03.jpg"
+      image = "programming.jpg"
       url = "projects/movies"
 
     [[params.tiles.showcase]]
-      title = "Investmet idea - LBS"
-      subtitle = "Long Volatility with Straddle"
-      image = "pic04.jpg"
-      url = "blogs/ipsum"
+      title = "Data Analytics with R - LBS"
+      subtitle = "Yield curve inversion"
+      image = "inversion.jpg"
+      url = "projects/curve"
 
 
     # You can make more showcases by copy and pasting the code above
@@ -127,15 +127,12 @@ disqusShortname = ""
 
   # Section Type Two
   [params.two]
-    enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
-    buttonText = "Get Started"
-    url = "blogs"
+    #enable = true
+    #title = "Need more info?"
+    #subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
+    #If you need more information on projects or CV details? Drop me an email or look again at the website!
+    #buttonText = "Get Started"
+    #url = "projects"
 
 
   # Contact section
