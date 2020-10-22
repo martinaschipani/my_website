@@ -44,11 +44,11 @@ disqusShortname = ""
     # logo = "logo.png"
 
     [[params.navigation.links]]
-      name = "About me"
+      name = "Home"
       url = "#"
 
     [[params.navigation.links]]
-      name = "CV"
+      name = "Bocconi & LBS projects"
       url = "blogs"
 
     [[params.navigation.links]]
@@ -56,8 +56,8 @@ disqusShortname = ""
       url = "blogs/ipsum"
 
     [[params.navigation.links]]
-      name = "Bachelors Thesis"
-      url = "elements.html"
+      name = "CV"
+      url = "CV"
 
     # Add custom links here by uncommenting code below. To remove links just delete
     # the [[params.navigation.links]] map associated with that link. Copy and paste
@@ -92,40 +92,30 @@ disqusShortname = ""
     # Display your showcases here.
     
     [[params.tiles.showcase]]
-      title = ""
-      subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic01.jpg"
-      url = "blogs/aliquam"
+      title = "Investment evaluation - Bocconi"
+      subtitle = "Harvard Case Study: Ocean Carrier"
+      image = "investment.jpg"
+      url = "projects/investment1"
 
     [[params.tiles.showcase]]
-      title = "Tempus"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic02.jpg"
-      url = "blogs/tempus"
+      title = "Cost of capital - Bocconi"
+      subtitle = "Harvard Case Study: Ameritrade"
+      image = "costcapital.jpg"
+      url = "projects/investment2"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
+      title = "Data Analytics with R - LBS"
+      subtitle = "Movie Directors"
       image = "pic03.jpg"
-      url = "blogs/magna"
+      url = "projects/movies"
 
     [[params.tiles.showcase]]
-      title = "Ipsum"
-      subtitle = "Nisl Sed Aliquam"
+      title = "Investmet idea - LBS"
+      subtitle = "Long Volatility with Straddle"
       image = "pic04.jpg"
       url = "blogs/ipsum"
 
-    [[params.tiles.showcase]]
-      title = "Consequat"
-      subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic05.jpg"
-      url = "blogs/ipsum"
 
-    [[params.tiles.showcase]]
-      title = "Etiam"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic06.jpg"
-      url = "blogs/ipsum"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]
