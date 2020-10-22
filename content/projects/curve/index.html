@@ -1,0 +1,201 @@
+---
+title: "Session 6: Homework 3"
+author: "Martina Schipani, Vencenz Mautner-Markhof, Sophie Lin, Ansh Chhabra, Carson Yiding Liu, Pingchuan Tian"
+date: "2020-10-22"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+---
+
+
+
+<div id="challenge-1-yield-curve-inversion" class="section level1">
+<h1>Challenge 1: Yield Curve inversion</h1>
+<pre class="r"><code># Get a list of FRED codes for US rates and US yield curve; choose monthly frequency
+# to see, eg., the 3-month T-bill https://fred.stlouisfed.org/series/TB3MS
+tickers &lt;- c(&#39;TB3MS&#39;, # 3-month Treasury bill (or T-bill)
+             &#39;TB6MS&#39;, # 6-month
+             &#39;GS1&#39;,   # 1-year
+             &#39;GS2&#39;,   # 2-year, etc....
+             &#39;GS3&#39;,
+             &#39;GS5&#39;,
+             &#39;GS7&#39;,
+             &#39;GS10&#39;,
+             &#39;GS20&#39;,
+             &#39;GS30&#39;)  #.... all the way to the 30-year rate
+
+# Turn  FRED codes to human readable variables
+myvars &lt;- c(&#39;3-Month Treasury Bill&#39;,
+            &#39;6-Month Treasury Bill&#39;,
+            &#39;1-Year Treasury Rate&#39;,
+            &#39;2-Year Treasury Rate&#39;,
+            &#39;3-Year Treasury Rate&#39;,
+            &#39;5-Year Treasury Rate&#39;,
+            &#39;7-Year Treasury Rate&#39;,
+            &#39;10-Year Treasury Rate&#39;,
+            &#39;20-Year Treasury Rate&#39;,
+            &#39;30-Year Treasury Rate&#39;)
+
+maturity &lt;- c(&#39;3m&#39;, &#39;6m&#39;, &#39;1y&#39;, &#39;2y&#39;,&#39;3y&#39;,&#39;5y&#39;,&#39;7y&#39;,&#39;10y&#39;,&#39;20y&#39;,&#39;30y&#39;)
+
+# by default R will sort these maturities alphabetically; but since we want
+# to keep them in that exact order, we recast maturity as a factor 
+# or categorical variable, with the levels defined as we want
+maturity &lt;- factor(maturity, levels = maturity)
+
+# Create a lookup dataset
+mylookup&lt;-data.frame(symbol=tickers,var=myvars, maturity=maturity)
+# Take a look:
+mylookup %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">symbol</th>
+<th align="left">var</th>
+<th align="left">maturity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">TB3MS</td>
+<td align="left">3-Month Treasury Bill</td>
+<td align="left">3m</td>
+</tr>
+<tr class="even">
+<td align="left">TB6MS</td>
+<td align="left">6-Month Treasury Bill</td>
+<td align="left">6m</td>
+</tr>
+<tr class="odd">
+<td align="left">GS1</td>
+<td align="left">1-Year Treasury Rate</td>
+<td align="left">1y</td>
+</tr>
+<tr class="even">
+<td align="left">GS2</td>
+<td align="left">2-Year Treasury Rate</td>
+<td align="left">2y</td>
+</tr>
+<tr class="odd">
+<td align="left">GS3</td>
+<td align="left">3-Year Treasury Rate</td>
+<td align="left">3y</td>
+</tr>
+<tr class="even">
+<td align="left">GS5</td>
+<td align="left">5-Year Treasury Rate</td>
+<td align="left">5y</td>
+</tr>
+<tr class="odd">
+<td align="left">GS7</td>
+<td align="left">7-Year Treasury Rate</td>
+<td align="left">7y</td>
+</tr>
+<tr class="even">
+<td align="left">GS10</td>
+<td align="left">10-Year Treasury Rate</td>
+<td align="left">10y</td>
+</tr>
+<tr class="odd">
+<td align="left">GS20</td>
+<td align="left">20-Year Treasury Rate</td>
+<td align="left">20y</td>
+</tr>
+<tr class="even">
+<td align="left">GS30</td>
+<td align="left">30-Year Treasury Rate</td>
+<td align="left">30y</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df &lt;- tickers %&gt;% tidyquant::tq_get(get=&quot;economic.data&quot;, 
+                   from=&quot;1960-01-01&quot;)   # start from January 1960
+
+glimpse(df)</code></pre>
+<pre><code>## Rows: 6,774
+## Columns: 3
+## $ symbol &lt;chr&gt; &quot;TB3MS&quot;, &quot;TB3MS&quot;, &quot;TB3MS&quot;, &quot;TB3MS&quot;, &quot;TB3MS&quot;, &quot;TB3MS&quot;, &quot;TB3MS...
+## $ date   &lt;date&gt; 1960-01-01, 1960-02-01, 1960-03-01, 1960-04-01, 1960-05-01,...
+## $ price  &lt;dbl&gt; 4.35, 3.96, 3.31, 3.23, 3.29, 2.46, 2.30, 2.30, 2.48, 2.30, ...</code></pre>
+<pre class="r"><code>yield_curve &lt;-left_join(df,mylookup,by=&quot;symbol&quot;) </code></pre>
+<div id="plotting-the-yield-curve" class="section level2">
+<h2>Plotting the yield curve</h2>
+<div id="yields-on-us-rates-by-duration-since-1960" class="section level3">
+<h3>Yields on US rates by duration since 1960</h3>
+<p><img src="C:/Users/Schipani/Desktop/my_website/images/yield_curve1.png" width="100%" style="display: block; margin: auto;" /><img src="index_files/figure-html/yield_curve_1-2.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="monthly-yields-on-us-rates-by-duration-since-1999-on-a-year-by-year-basis" class="section level3">
+<h3>Monthly yields on US rates by duration since 1999 on a year-by-year basis</h3>
+<p><img src="C:/Users/Schipani/Desktop/my_website/images/yield_curve2.png" width="100%" style="display: block; margin: auto;" /><img src="index_files/figure-html/yield_curve_2-2.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="month-and-10-year-yields-since-1999" class="section level3">
+<h3>3-month and 10-year yields since 1999</h3>
+<p><img src="C:/Users/Schipani/Desktop/my_website/images/yield_curve3.png" width="100%" style="display: block; margin: auto;" /><img src="index_files/figure-html/yield_curve_3-2.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># get US recession dates after 1946 from Wikipedia 
+# https://en.wikipedia.org/wiki/List_of_recessions_in_the_United_States
+
+recessions &lt;- tibble(
+  from = c(&quot;1948-11-01&quot;, &quot;1953-07-01&quot;, &quot;1957-08-01&quot;, &quot;1960-04-01&quot;, &quot;1969-12-01&quot;, &quot;1973-11-01&quot;, &quot;1980-01-01&quot;,&quot;1981-07-01&quot;, &quot;1990-07-01&quot;, &quot;2001-03-01&quot;, &quot;2007-12-01&quot;),  
+  to = c(&quot;1949-10-01&quot;, &quot;1954-05-01&quot;, &quot;1958-04-01&quot;, &quot;1961-02-01&quot;, &quot;1970-11-01&quot;, &quot;1975-03-01&quot;, &quot;1980-07-01&quot;, &quot;1982-11-01&quot;, &quot;1991-03-01&quot;, &quot;2001-11-01&quot;, &quot;2009-06-01&quot;) 
+  )  %&gt;% 
+  mutate(From = ymd(from), 
+         To=ymd(to),
+         duration_days = To-From)%&gt;%
+
+  filter(to &gt; 1960)
+
+recessions</code></pre>
+<pre><code>## # A tibble: 8 x 5
+##   from       to         From       To         duration_days
+##   &lt;chr&gt;      &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;     &lt;drtn&gt;       
+## 1 1960-04-01 1961-02-01 1960-04-01 1961-02-01 306 days     
+## 2 1969-12-01 1970-11-01 1969-12-01 1970-11-01 335 days     
+## 3 1973-11-01 1975-03-01 1973-11-01 1975-03-01 485 days     
+## 4 1980-01-01 1980-07-01 1980-01-01 1980-07-01 182 days     
+## 5 1981-07-01 1982-11-01 1981-07-01 1982-11-01 488 days     
+## 6 1990-07-01 1991-03-01 1990-07-01 1991-03-01 243 days     
+## 7 2001-03-01 2001-11-01 2001-03-01 2001-11-01 245 days     
+## 8 2007-12-01 2009-06-01 2007-12-01 2009-06-01 548 days</code></pre>
+<pre class="r"><code>yield_3month &lt;- yield_curve %&gt;%                           #create new dataset
+  filter(var %in% &quot;3-Month Treasury Bill&quot;) %&gt;%  
+ #only 3m treasury bills
+  select(date, maturity, price) %&gt;%                   #select only the columns &quot;date&quot;, &quot;maturity&quot;, and &quot;price&quot;
+  mutate(tbill3m = price)                             #create new column
+
+yield_10year &lt;- yield_curve %&gt;%                          #create new dataset
+  filter(var %in% &quot;10-Year Treasury Rate&quot;) %&gt;%        #only 10y treasury bills
+  select(date, maturity, price) %&gt;%                   #select only the columns &quot;date&quot;, &quot;maturity&quot;, and &quot;price&quot;
+  mutate(tbond10y = price)                            #create new column
+
+yield_cummulative &lt;- left_join(yield_3month, yield_10year, by = &quot;date&quot;) %&gt;%    #left-join the two new datasets
+  mutate(spread = tbond10y - tbill3m) %&gt;%                         #calculate the spread in new column
+  select(date, spread)                                            #select only &quot;date&quot; adn &quot;spread&quot;
+
+
+
+ggplot(yield_cummulative, aes(x = date, y = spread)) +            #create ggplot
+  geom_line() +                                             #type = linegraph
+  theme_bw() +                                              #background of plot = white
+  geom_ribbon(aes(ymin= 0, ymax = pmax(0,spread)), fill = &quot;steelblue3&quot;, alpha = 0.5) +  #positive values are blew
+  geom_ribbon(aes(ymin= pmin(0, spread), ymax = 0), fill = &quot;brown3&quot;, alpha = 0.5) +     #negative values are red
+  theme(axis.text.x = element_text(angle = 60, hjust = -0.5, size = 5),                 #size of x axis lables
+        plot.title = element_text(size = 8, face = &quot;bold&quot;),                             #change title theme
+        plot.subtitle = element_text(size = 4.5),                                       #cahnge subtitle size
+        plot.caption = element_text(size = 5),                                          #change caption size
+        axis.title.y = element_text(size = 5),                                          #change y axis label size
+        panel.border = element_blank(),                                                 #no border
+        ) +                                                 #no axis ticks
+  scale_x_date(date_breaks = &#39;2 years&#39;, date_labels = &quot;%Y&quot;) +                        #change the scale of x labels
+  labs(title = &quot;Yield Curve Inversions&quot;, subtitle = &quot;Difference in % points, monthly averages \nShaded areas represent recession&quot;, y = &quot;(10 year-3 month) spread yield in %&quot;, caption = &quot;Source: FRED, Federal Reserve Bank of St. Louis&quot;, x = &quot;&quot;) +
+  geom_rect(data = recessions, inherit.aes = FALSE, aes(xmin = From, xmax = To, ymin = -Inf, ymax = Inf), fill = &quot;grey&quot;, alpha = 0.8) + #recessions in grey
+  geom_hline(yintercept = 0, color = &quot;black&quot;)   #add black line at yield spread = 0</code></pre>
+<p><img src="index_files/figure-html/graph-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
