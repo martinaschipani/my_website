@@ -1,0 +1,129 @@
+---
+title: "Session 6: Homework 3"
+author: "Martina Schipani, Vencenz Mautner-Markhof, Sophie Lin, Ansh Chhabra, Carson Yiding Liu, Pingchuan Tian"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(GGally)
+library(readxl)
+library(here)
+library(skimr)
+library(janitor)
+library(broom)
+library(tidyquant)
+library(infer)
+library(openintro)
+library(tidyquant)
+```
+
+# IMDB ratings: Differences between directors
+
+```{r directors, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "directors.png"), error = FALSE)
+```
+
+
+```{r load-movies-data}
+movies <- read_csv("movies.csv")
+glimpse(movies)
+```
+
+
+```{r}
+movies_rating<-movies%>%filter(director %in% c("Steven Spielberg" , "Tim Burton" )) %>% select(director,rating)
+
+
+CI_rating<-movies_rating%>%group_by(director)%>%summarise(mean_rating = mean(rating, na.rm = TRUE), 
+             sd_rating = sd(rating, na.rm = TRUE), 
+             count = n(), 
+             
+             # get t-critical value with (n-1) degrees of freedom
+             t_critical = qt(0.975, count-1),
+             se = sd_rating/sqrt(count),
+             margin_of_error = t_critical * se,
+             ci_low = mean_rating - margin_of_error,
+             ci_high = mean_rating + margin_of_error)
+
+
+
+ggplot(CI_rating, 
+       aes(x=reorder(director, mean_rating), 
+           y=mean_rating, 
+           colour=director)) +
+  geom_point() +
+  geom_errorbar(width=.2, aes(ymin=ci_low, ymax=ci_high)) + 
+  labs(x=" ",
+       y= "Mean IMBD Rating", 
+       title="Do Spielberg and Burton have the same IMBD ratings?",
+       subtitle="95% confidence interval overlap") +
+  coord_flip()+
+  theme_bw()+
+  theme(legend.position = "none")+ geom_text(aes(label=round(mean_rating,2),mean_rating=mean_rating+0.5),position = position_dodge(1.5),vjust = -1)
+ 
+```
+
+```{r}
+t.test(rating~director,data=movies_rating)
+
+ex1_props <- movies_rating %>%
+  filter(director == "Steven Spielberg") %>%
+  select(rating) %>%
+  specify(response = rating) %>%
+  generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+ex2_props <- movies_rating %>%
+  filter(director == "Tim Burton") %>%
+  select(rating) %>%
+  specify(response = rating) %>%
+  generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+  
+# Calculate variability of p-hat
+ex1_props %>% 
+  summarize(variability = sd(stat))
+  
+# Calculate variability of p-hat*
+ex2_props %>% 
+  summarize(variability = sd(stat))
+
+# Combine data from both experiments
+both_ex_props <- bind_rows(ex1_props, ex2_props, .id = "experiment")
+
+# Using both_ex_props, plot stat colored by experiment
+ggplot(both_ex_props, aes(stat, color = experiment)) + 
+  # Add a density layer with bandwidth 0.1
+  geom_density(bw = 0.1)+ 
+  labs(x="Mean IMBD Rating ",
+       title="Density plot of  a null distribution for a hypothesis test.?")
+```
+
