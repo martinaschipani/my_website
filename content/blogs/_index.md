@@ -1,9 +1,9 @@
 ---
-date: "2017-10-31T22:27:21-05:00"
-draft: false
+title: "About me"
+slug: "blogs"
 image: pic02.jpg
-slug: blogs
-title: Lifestyle
+date: 2017-10-31T22:27:21-05:00
+draft: false
 ---
 
-My blogs about technology and lifestyle.
+More about me and my previous working experience
