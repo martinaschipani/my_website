@@ -69,7 +69,7 @@ disqusShortname = ""
     # Button Style 1
     [[params.navigation.button1]]
       name = "Get Started"
-      url = "projects"
+      url = "#"
 
     # Button Style 2
     #[[params.navigation.button2]]
@@ -168,7 +168,7 @@ disqusShortname = ""
     [[params.contact.address]]
     title = "Address"
     street = "Regent's Park"
-    city = ", London, NW1 4SA"
+    city = "London, NW1 4SA"
     country = "United Kingdom"
 
   # Footer section
